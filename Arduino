@@ -1,0 +1,191 @@
+Arduino SFL Program
+
+//YWROBOT
+//Compatible with the Arduino IDE 1.0
+//Library version:1.1
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+
+void setup()
+{
+
+  const int analogPin = A12;//the analog input pin for POT 1
+
+  int inputValue = 0;//variable to store the value coming from sensor
+  int outputValue = 250 ;
+
+  const int analogPin2 = A8;//the analog input pin for POT 2
+
+  int inputValue2 = 0;//variable to store the value coming from sensor
+  int outputValue2 = 250 ;
+  
+  const int analogPin4 = A0;//the analog input pin for POT 2
+
+  int inputValue4 = 0;//variable to store the value coming from sensor
+  int outputValue4 = 250 ;
+  
+  const int analogPin6 = A10;//the analog input pin for POT 2
+
+  int inputValue6 = 0;//variable to store the value coming from sensor
+  int outputValue6 = 250 ;
+
+  
+ }
+
+void loop()
+{
+
+const int ledPin =  12;      // the number of the LED pin // LED Pin On 
+pinMode(ledPin, OUTPUT);
+
+const int buttonPin = 7; // Initialize Pin 7 NC/NO transistor
+pinMode(7, OUTPUT);  // declare pin 7 to be an output
+ 
+int buttonState = 0; // Set NC/NC variable name
+pinMode(buttonPin, INPUT); // Set Input variable
+
+buttonState = digitalRead(buttonPin); // ButtonStated digitalread ButtonPin
+
+digitalWrite(ledPin, LOW);
+
+  const int analogPin = A12;//the analog input pin for POT 1
+
+  int inputValue = 0;//variable to store the value coming from sensor
+  int outputValue = 250 ;
+
+  const int analogPin2 = A8;//the analog input pin for POT 2
+
+  int inputValue2 = 0;//variable to store the value coming from sensor
+  int outputValue2 = 250 ;
+  
+  const int analogPin4 = A0;//the analog input pin for POT 2
+
+  int inputValue4 = 0;//variable to store the value coming from sensor
+  int outputValue4 = 250 ;
+  
+  const int analogPin6 = A10;//the analog input pin for POT 2
+
+  int inputValue6 = 0;//variable to store the value coming from sensor
+  int outputValue6 = 250 ;
+
+
+for (int i=0; i<3600; i++)
+
+{
+//if pushButton is On
+
+if (buttonState == HIGH)
+{
+  
+while (buttonState == HIGH)
+
+{
+
+digitalWrite(ledPin, HIGH);
+
+    inputValue = analogRead(analogPin);   //read the value from the sensor
+    outputValue = map(inputValue,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Exposure
+
+    inputValue2 = analogRead(analogPin2);   //read the value from the sensor
+    outputValue2 = map(inputValue2,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Dark
+
+    inputValue4 = analogRead(analogPin4);   //read the value from the sensor
+    outputValue4 = map(inputValue4,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Flush out 
+
+    inputValue6 = analogRead(analogPin6);   //read the value from the sensor
+    outputValue6 = map(inputValue6,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Flush out 
+
+
+  lcd.init();                      // initialize the lcd 
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Ex:");
+  lcd.setCursor(3,0);
+  lcd.print(outputValue);
+  
+  lcd.setCursor(8,0);
+  lcd.print("Dk:");
+  lcd.setCursor(11,0);
+  lcd.print(outputValue2);
+
+  lcd.setCursor(0,1);
+  lcd.print("Fh:");
+  lcd.setCursor(3,1);
+  lcd.print(outputValue4);
+  
+  lcd.setCursor(8,1);
+  lcd.print("St:");
+  lcd.setCursor(11,1);
+  lcd.print(outputValue6);
+
+}
+
+}
+
+else if (buttonState == LOW) {
+
+    inputValue = analogRead(analogPin);   //read the value from the sensor
+    outputValue = map(inputValue,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Exposure time
+
+    inputValue2 = analogRead(analogPin2);   //read the value from the sensor
+    outputValue2 = map(inputValue2,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Dark Polymerization time
+
+    inputValue4 = analogRead(analogPin4);   //read the value from the sensor
+    outputValue4 = map(inputValue4,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Flush out time 
+
+    inputValue6 = analogRead(analogPin6);   //read the value from the sensor
+    outputValue6 = map(inputValue6,0,1023,100,1001);//Convert from 0-1023 to 10 to 1000 Stop time 
+
+  lcd.init();                      // initialize the lcd 
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Ex:");
+  lcd.setCursor(3,0);
+  lcd.print(outputValue);
+  
+  lcd.setCursor(8,0);
+  lcd.print("Dk:");
+  lcd.setCursor(11,0);
+  lcd.print(outputValue2);
+
+  lcd.setCursor(0,1);
+  lcd.print("Fh:");
+  lcd.setCursor(3,1);
+  lcd.print(outputValue4);
+  
+  lcd.setCursor(8,1);
+  lcd.print("St:");
+  lcd.setCursor(11,1);
+  lcd.print(outputValue6);
+
+while (buttonState == LOW)
+
+{
+    analogWrite(3, 255);               // EXOPOSURE set the brightness of pin 3: AMARILLO - UV On
+    
+    delay(outputValue);                                 //FIJO        //wait for 1000ms
+  
+    analogWrite(3, 0);               // set the brightness of pin 3: AMARILLO
+    
+    delay(outputValue2);
+    
+    digitalWrite(ledPin,HIGH);         // LED ROJO - FLOW
+ 
+    delay(outputValue4);
+    
+    digitalWrite(ledPin,LOW);         // LED ROJO
+
+    delay(outputValue6);
+
+    digitalWrite(ledPin, LOW);
+
+}
+
+}
+
+} 
+
+}
